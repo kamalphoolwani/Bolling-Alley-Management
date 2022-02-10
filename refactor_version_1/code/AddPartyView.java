@@ -151,20 +151,17 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 
 	}
 	
-	public void actionAddPatron() {
-		if (selectedNick != null && party.size() < maxSize) {
-			if (party.contains(selectedNick)) {
-				System.err.println("Member already in Party");
-			} else {
-				party.add(selectedNick);
-				partyList.setListData(party);
-			}
-		}
-	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(addPatron)) {
-			actionAddPatron();
+			if (selectedNick != null && party.size() < maxSize) {
+				if (party.contains(selectedNick)) {
+					System.err.println("Member already in Party");
+				} else {
+					party.add(selectedNick);
+					partyList.setListData(party);
+				}
+			}
 		}
 		if (e.getSource().equals(remPatron)) {
 			if (selectedMember != null) {
