@@ -77,8 +77,10 @@ public class Pinsetter {
 
 	private Random rnd;
 	private Vector subscribers;
-
+	private int jdpins;
 	private boolean[] pins; 
+	private boolean foul;
+	private int throwNumber;
 			/* 0-9 of state of pine, true for standing, 
 			false for knocked down
 
@@ -88,8 +90,7 @@ public class Pinsetter {
 			      0
 
 			*/
-	private boolean foul;
-	private int throwNumber;
+
 
 	/** sendEvent()
 	 * 
@@ -99,9 +100,12 @@ public class Pinsetter {
 	 * @post all subscribers have recieved pinsetter event with updated state
 	 * */
 	private void sendEvent(int jdpins) {	// send events when our state is changd
+//		this.setChanged();
+//		this.notifyObservers();
 		for (int i=0; i < subscribers.size(); i++) {
-			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(
-				new PinsetterEvent(pins, foul, throwNumber, jdpins));
+//			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(
+//				new PinsetterEvent(pins, foul, throwNumber, jdpins));
+			((PinsetterObserver)subscribers.get(i)).receivePinsetterEvent(this);
 		}
 	}
 
@@ -151,6 +155,8 @@ public class Pinsetter {
 			Thread.sleep(500);				// pinsetter is where delay will be in a real game
 		} catch (Exception e) {}
 
+		
+		this.jdpins = count;
 		sendEvent(count);
 
 		throwNumber++;
@@ -172,6 +178,7 @@ public class Pinsetter {
 			Thread.sleep(1000);
 		} catch (Exception e) {}
 		
+		this.jdpins = -1;
 		sendEvent(-1);
 	}
 
@@ -186,7 +193,68 @@ public class Pinsetter {
 		for (int i=0; i <= 9; i++) {
 			pins[i] = true;
 		}
-	}		
+	}
+	
+	/** pinKnockedDown()
+	 * 
+	 * check if a pin has been knocked down
+	 * 
+	 * @return true if pin [i] has been knocked down
+	 */
+	public boolean pinKnockedDown(int i) {
+		return !pins[i];
+	}
+	
+	/** pinsDownOnThisThrow()
+	 * 
+	 * @return the number of pins knocked down assosicated with this event
+	 */
+	public int pinsDownOnThisThrow() {
+		return jdpins;
+	}
+	
+	/** totalPinsDown()
+	 * 
+	 * @return the total number of pins down for pinsetter that generated the event
+	 */
+	public int totalPinsDown() {
+		int count = 0;
+		
+		for (int i=0; i <= 9; i++) {
+			if (pinKnockedDown(i)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * @return the rnd
+	 */
+	public Random getRnd() {
+		return rnd;
+	}
+
+	/**
+	 * @return the pins
+	 */
+	public boolean[] getPins() {
+		return pins;
+	}
+
+	/**
+	 * @return the foul
+	 */
+	public boolean isFoulCommited() {
+		return foul;
+	}
+
+	/**
+	 * @return the throwNumber
+	 */
+	public int getThrowNumber() {
+		return throwNumber;
+	}
 
 	/** subscribe()
 	 * 
