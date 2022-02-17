@@ -137,7 +137,7 @@ public class LaneStatusView   implements ActionListener, LaneObserver, Pinsetter
 		}
 	}
 
-	public void receivePinsetterEvent(PinsetterEvent pe) {
+	public void receivePinsetterEvent(Pinsetter pe) {
 		pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString() );
 	}
 
